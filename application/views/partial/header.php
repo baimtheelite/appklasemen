@@ -33,6 +33,9 @@
             <li class="nav-item">
                 <a class="nav-link" href="<?= base_url('Klasemen/pertandingan') ?>">Pertandingan</a>
             </li>
+            <li class="nav-item">
+                <a class="nav-link" href="<?= base_url('Klasemen/match_results') ?>">Hasil</a>
+            </li>
         </ul>
     </div>
     </nav>

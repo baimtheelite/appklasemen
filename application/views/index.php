@@ -11,7 +11,7 @@
                     <div class="card-header text-center">
                         <h2>Tabel Klasemen</h2>
                     </div>
-                    <div class="card-body">
+                    <div class="card-body table-responsive">
                         <table class="table">
                             <thead>
                                 <th>Posisi</th>
@@ -57,6 +57,10 @@
                         <h4>Team</h4>
                     </div>
                     <div class="card-body">
+                    <?php 
+                    $row_count = 0 ;
+                    $num_of_cols = 4;
+                    ?>
                         <div class="row">
                         <?php foreach ($team->result() as $tim ) { ?>
                             <div class="col-md-3">
@@ -65,10 +69,14 @@
                                         <h5><?=  $tim->nama_team; ?></h5>
                                     </div>
                                     <div class="card-body text-center">
-                                        <img src="<?= base_url('uploads/'). $tim->logo ?>" alt="no logo" width="150" height="150">
+                                        <img class="img-fluid" src="<?= base_url('uploads/'). $tim->logo ?>" alt="no logo" width="150" height="150">
                                     </div>
                                 </div>
                             </div>
+                            <?php 
+                            $row_count++; 
+                            if($row_count % $num_of_cols == 0) echo '</div><div class="row" style="margin-top: 8px">';
+                            ?>
                         <?php } ?>
                         </div>
                     </div>

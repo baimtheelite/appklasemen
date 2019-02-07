@@ -1,8 +1,9 @@
 <?php $this->load->view('partial/header.php') ?>
-<!-- <div id="timsama" class="alert alert-warning alert"></div> -->
+<div style="visibility: hidden" id="timsama" class="alert alert-warning alert text-center">Tim Home dan Away Sama. Tidak dapat mengubah skor!</div>
 <?= form_open(''); ?>
 <div class="container">
     <div class="row">
+    <input name="id_match_results" type="hidden" readonly value="<?= $id_match_results; ?>">
         <div class="col-lg-12">
             <div class="row">
                <div class="col-md-6">
@@ -127,9 +128,10 @@
                         html += '<tr>'+
                                     '<td><span class="badge badge-secondary">'+data.pemain[i].nomor_punggung+'</span></td>'+
                                     '<td>'+data.pemain[i].nama_pemain+'</td>'+
-                                    '<td><input class="enable goal-home form-control col-6" name="pemain_home['+data.pemain[i].id_pemain+'][goal_home]" type="number" value="0" disabled></td>'+
-                                    '<td><input class="enable assist-home form-control col-6" name="pemain_home['+data.pemain[i].id_pemain+'][assist_home]" type="number" value="0" disabled></td>'+
-                                    '<td><input class="enable owngoal-home form-control col-6" name="pemain_home['+data.pemain[i].id_pemain+'][owngoal_home]" type="number" value="0" disabled></td>'+
+                                    '<td><input class="enable goal-home form-control col-6" name="pemain['+data.pemain[i].id_pemain+'][goal]" type="number" value="0" disabled></td>'+
+                                    '<td><input class="enable assist-home form-control col-6" name="pemain['+data.pemain[i].id_pemain+'][assist]" type="number" value="0" disabled></td>'+
+                                    '<td><input class="enable owngoal-home form-control col-6" name="pemain['+data.pemain[i].id_pemain+'][owngoal]" type="number" value="0" disabled></td>'+
+                                    '<input type="hidden" name="pemain['+data.pemain[i].id_pemain+'][side]" value="home">'+
                                 '</tr>'
                     }
                     $("#table-home").slideDown("slow", function(){
@@ -159,13 +161,13 @@
                         html += '<tr>'+
                                     '<td><span class="badge badge-secondary">'+data.pemain[i].nomor_punggung+'</span></td>'+
                                     '<td>'+data.pemain[i].nama_pemain+'</td>'+
-                                    '<td><input class="enable goal-away form-control col-6" name="pemain_away['+data.pemain[i].id_pemain+'][goal_away]" type="number" value="0" disabled></td>'+
-                                    '<td><input class="enable assist-away form-control col-6" name="pemain_away['+data.pemain[i].id_pemain+'][assist_away]" type="number" value="0" disabled></td>'+
-                                    '<td><input class="enable owngoal-away form-control col-6" name="pemain_away['+data.pemain[i].id_pemain+'][owngoal_away]" type="number" value="0" disabled></td>'+
+                                    '<td><input class="enable goal-away form-control col-6" name="pemain['+data.pemain[i].id_pemain+'][goal]" type="number" value="0" disabled></td>'+
+                                    '<td><input class="enable assist-away form-control col-6" name="pemain['+data.pemain[i].id_pemain+'][assist]" type="number" value="0" disabled></td>'+
+                                    '<td><input class="enable owngoal-away form-control col-6" name="pemain['+data.pemain[i].id_pemain+'][owngoal]" type="number" value="0" disabled></td>'+
+                                    '<input type="hidden" name="pemain['+data.pemain[i].id_pemain+'][side]" value="away">'+                                
                                 '</tr>'
                     }
                     $("#table-away").html(html);
-
                 }
             })
         })
@@ -174,9 +176,10 @@
             if($("#home").val() != null && $("#away").val() != null) {
                 if($("#home").val() != $("#away").val()){
                     $("#submit, .enable").removeAttr("disabled");
+                    $("#timsama").css('visibility', 'hidden');
                 }else{
-                    $("#submit, .enable").attr("disabled", "true");     
-                    //$("#timsama").html("Tim sama! ubah team!")
+                    $("#sub mit, .enable").attr("disabled", "true");     
+                    $("#timsama").css('visibility', 'visible');
                     alert("Tim home dan away sama. Ubah team!");
                 }
             }   
