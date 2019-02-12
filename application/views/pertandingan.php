@@ -9,13 +9,13 @@
                <div class="col-md-6">
                     <div class="card text-center">
                         <div class="card-header">
-                            <h4>Home</h4>
+                            <h4 class="text-primary">Home</h4>
                         </div>
                         <div class="card-body">
                             <img id="logohome" class="rounded mx-auto d-block" src=""  alt="" width="150" height="150">
                         </div>
                         <div class="card-footer">
-                            <select name="home" id="home">
+                            <select class="form-control-lg" name="home" id="home">
                               <option value="" selected disabled hidden>-Pilih Team- </option>
                                 <?php foreach ($team->result() as $match) { ?>
                                         <option value="<?= $match->id_team; ?>"><?= $match->nama_team; ?></option>
@@ -38,13 +38,13 @@
                 <div class="col-md-6">
                     <div class="card text-center">
                         <div class="card-header">
-                            <h4>Away</h4>            
+                            <h4 class="text-danger">Away</h4>            
                         </div>
                         <div class="card-body">
                             <img id="logoaway" class="rounded mx-auto d-block" src="" alt="" width="150" height="150">
                         </div>
                         <div class="card-footer">
-                        <select name="away" id="away">
+                        <select class="form-control-lg" name="away" id="away">
                               <option value="" selected disabled hidden>-Pilih Team- </option>
                                 <?php foreach ($team->result() as $match) { ?>
                                         <option value="<?= $match->id_team; ?>"><?= $match->nama_team; ?></option>
@@ -71,8 +71,8 @@
             <div class="card">
                 <table class="table">
                     <thead>
-                        <th>No</th>
                         <th>Nama</th>
+                        <th></th>
                         <th>Goal</th>
                         <th>Assist</th>
                         <th>Own Goal</th>
@@ -87,8 +87,8 @@
             <div class="card">
                 <table class="table">
                     <thead>
-                        <th>No</th>
                         <th>Nama</th>
+                        <th></th>
                         <th>Goal</th>
                         <th>Assist</th>
                         <th>Own Goal</th>
@@ -110,7 +110,6 @@
     $(document).ready(function(){
         $('#home').change(function(){
             var home = $(this).val();
-            $("#logohome").fadeOut("slow");
             $.ajax({
                 url         : '<?= base_url("Klasemen/match/"); ?>' +home,
                 type        : 'GET',
@@ -120,30 +119,26 @@
                 success     : function(data){
                     $("#teamhome").val(data.team[0].kode_team)
                     $("#logohome").attr("src", "<?= base_url('uploads/'); ?>"+data.team[0].logo);
-                    $("#logohome").fadeIn("slow");
 
-                    var html = ''
+                    var html = '';
                     var i;
                     for(i = 0; i < data.pemain.length; i++){
                         html += '<tr>'+
-                                    '<td><span class="badge badge-secondary">'+data.pemain[i].nomor_punggung+'</span></td>'+
                                     '<td>'+data.pemain[i].nama_pemain+'</td>'+
+                                    '<td><span class="badge badge-primary">'+data.pemain[i].nomor_punggung+'</span></td>'+
                                     '<td><input class="enable goal-home form-control col-6" name="pemain['+data.pemain[i].id_pemain+'][goal]" type="number" value="0" disabled></td>'+
                                     '<td><input class="enable assist-home form-control col-6" name="pemain['+data.pemain[i].id_pemain+'][assist]" type="number" value="0" disabled></td>'+
                                     '<td><input class="enable owngoal-home form-control col-6" name="pemain['+data.pemain[i].id_pemain+'][owngoal]" type="number" value="0" disabled></td>'+
                                     '<input type="hidden" name="pemain['+data.pemain[i].id_pemain+'][side]" value="home">'+
                                 '</tr>'
                     }
-                    $("#table-home").slideDown("slow", function(){
-                        $(this).html(html);
-                    });
+                        $("#table-home").html(html);
                 }
             })
         });
 
         $('#away').change(function(){
             var away = $(this).val();
-            $("#logoaway").fadeOut("slow");
             $.ajax({
                 url         : '<?= base_url("Klasemen/match/"); ?>' +away,
                 type        : 'GET',
@@ -153,14 +148,13 @@
                 success     : function(data){
                     $("#teamaway").val(data.team[0].kode_team);                    
                     $("#logoaway").attr("src", "<?= base_url('uploads/'); ?>"+data.team[0].logo);
-                    $("#logoaway").fadeIn("slow");
                     
                     var html = ''
                     var i;
                     for(i = 0; i < data.pemain.length; i++){
                         html += '<tr>'+
-                                    '<td><span class="badge badge-secondary">'+data.pemain[i].nomor_punggung+'</span></td>'+
                                     '<td>'+data.pemain[i].nama_pemain+'</td>'+
+                                    '<td><span class="badge badge-danger">'+data.pemain[i].nomor_punggung+'</span></td>'+
                                     '<td><input class="enable goal-away form-control col-6" name="pemain['+data.pemain[i].id_pemain+'][goal]" type="number" value="0" disabled></td>'+
                                     '<td><input class="enable assist-away form-control col-6" name="pemain['+data.pemain[i].id_pemain+'][assist]" type="number" value="0" disabled></td>'+
                                     '<td><input class="enable owngoal-away form-control col-6" name="pemain['+data.pemain[i].id_pemain+'][owngoal]" type="number" value="0" disabled></td>'+
@@ -178,14 +172,14 @@
                     $("#submit, .enable").removeAttr("disabled");
                     $("#timsama").css('visibility', 'hidden');
                 }else{
-                    $("#sub mit, .enable").attr("disabled", "true");     
+                    $("#submit, .enable").attr("disabled", "true");     
                     $("#timsama").css('visibility', 'visible');
                     alert("Tim home dan away sama. Ubah team!");
                 }
             }   
         })
         
-        $("#table-home, #table-away").on("click", ".goal-home, .goal-away, .owngoal-home, .owngoal-away",function(){
+        $("#table-home, #table-away").on("click", ".goal-home, .goal-away, .owngoal-home, .owngoal-away", function(){
             var totalGoalHome = 0;
             var totalGoalAway = 0;
 

@@ -1,4 +1,5 @@
 <?php $this->load->view('partial/header.php') ?>
+<?php $this->load->view('partial/tambah_team.php') ?>
 
     <div class="container">
         <div class="jumbotron text-center">
@@ -62,9 +63,10 @@
                     $num_of_cols = 4;
                     ?>
                         <div class="row">
-                        <?php foreach ($team->result() as $tim ) { ?>
+                        <?php foreach ($team_card->result() as $tim ) { ?>
                             <div class="col-md-3">
-                                <div class="card">
+                            <a style="display: block; cursor: pointer; text-decoration: none" href="<?= base_url('Klasemen/team/'. $tim->id_team); ?>">
+                                <div class="card w3-hover-shadow">
                                     <div class="card-header text-center">
                                         <h5><?=  $tim->nama_team; ?></h5>
                                     </div>
@@ -73,11 +75,22 @@
                                     </div>
                                 </div>
                             </div>
+                            </a>
                             <?php 
                             $row_count++; 
                             if($row_count % $num_of_cols == 0) echo '</div><div class="row" style="margin-top: 8px">';
                             ?>
                         <?php } ?>
+                        <div class="col-md-3">
+                            <a data-toggle="modal" data-target="#tambahTeam">
+                            <div class="card w3-hover-shadow">
+                                <div class="card-body text-center align-items-center justify-content-center">
+                                    <h1>Tambah Team</h1>
+                                    <h1><span class="fa fa-plus-circle fa-2x"></span></h1>
+                                </div>
+                            </div>
+                            </a>
+                        </div>
                         </div>
                     </div>
                 </div>
