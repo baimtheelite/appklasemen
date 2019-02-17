@@ -7,6 +7,7 @@
         }
 
         public function index(){
+            $data['active'] = $this->uri->segment(2);
             $data['team'] = $this->m->query('SELECT * FROM tbl_team ORDER BY points DESC, goal_difference DESC');
             $data['team_card'] = $this->m->query('SELECT * FROM tbl_team ORDER BY nama_team');
             
@@ -116,26 +117,30 @@
 
                 redirect('Klasemen');
             }
-            
+            $active = $this->uri->segment(2);
             $team = $this->m->query('SELECT * FROM tbl_team ORDER BY nama_team ASC');
             $id_match_results   = $this->m->max('tbl_match_results', 'id_match_results');            
             $data = array(
                 'id_match_results' => ($id_match_results[0]['id_match_results'] + 1),
-                'team' => $team
+                'team' => $team,
+                'active' => $active
             );
             $this->load->view('pertandingan.php', $data);
         }
         
         public function match_results(){
+            $data['active'] = $this->uri->segment(2);
             $data['results'] = $this->m->query('SELECT *, team_home.kode_team as home, team_away.kode_team as away, team_home.logo as logo_home, team_away.logo as logo_away, DATE_FORMAT(tanggal, "%d %M %Y") as tgl 
                                                 FROM tbl_match_results 
                                                 INNER JOIN tbl_team as team_home ON tbl_match_results.id_team_home = team_home.id_team
                                                 INNER JOIN tbl_team as team_away ON tbl_match_results.id_team_away = team_away.id_team
+                                                ORDER BY id_match_results DESC
                                                 ');
             $this->load->view('hasil_pertandingan', $data);
         }
 
         public function match_results_detail($id_match_results){
+            $active = $this->uri->segment(2);
            $home = $this->m->query('SELECT *, tbl_match_results_detail.goal as goal, tbl_match_results_detail.assist as assist, tbl_match_results_detail.owngoal as owngoal, DATE_FORMAT(tanggal, "%d %M %Y") as tgl 
                                                     FROM tbl_match_results_detail
                                                     INNER JOIN tbl_pemain ON tbl_match_results_detail.id_pemain = tbl_pemain.id_pemain
@@ -158,13 +163,16 @@
                 'away' => $away,
                 'data_home' => $data_home[0],
                 'data_away' => $data_away[0],
+                'active' => $active
             );            
                                                 
             $this->load->view('hasil_pertandingan_detail', $result_detail);
         }
 
         public function team($id_team = 0){
+            $active = $this->uri->segment(2);
             $tim = $this->m->GetWhere('tbl_team', array('id_team' => $id_team));
+            $posisi = $this->m->query('SELECT * FROM tbl_team ORDER BY points DESC, goal_difference DESC');
             $squad = $this->m->query('SELECT 
                                        *
                                     FROM 
@@ -173,27 +181,43 @@
                                     ORDER BY FIELD (posisi, "kiper", "belakang", "tengah", "striker")
                                     ');
             $goal = $this->m->query('SELECT 
-                                       MAX(goal) AS goal, nama_pemain
+                                       id_pemain, nama_pemain, goal
                                     FROM 
                                         tbl_team, tbl_pemain
                                     WHERE tbl_team.id_team = tbl_pemain.id_team AND tbl_team.id_team = '.$id_team.'
+                                    ORDER BY goal DESC
+                                    LIMIT 1 
                                     ');
             $assist = $this->m->query('SELECT 
-                                       MAX(assist) AS assist, nama_pemain
+                                       id_pemain, nama_pemain, assist
                                     FROM 
                                         tbl_team, tbl_pemain                                    
-                                    WHERE tbl_team.id_team = tbl_pemain.id_team AND tbl_team.id_team = '.$id_team.' AND tbl_pemain.assist IN (SELECT MAX(assist) from tbl_pemain)
+                                    WHERE tbl_team.id_team = tbl_pemain.id_team AND tbl_team.id_team = '.$id_team.'
+                                    ORDER BY assist DESC
+                                    LIMIT 1
                                     ');
+             $results = $this->m->query('SELECT 
+                                        *, team_home.kode_team as home, team_away.kode_team as away, team_home.logo as logo_home, team_away.logo as logo_away, DATE_FORMAT(tanggal, "%d %M %Y") as tgl 
+                                    FROM 
+                                        tbl_match_results 
+                                    INNER JOIN tbl_team as team_home ON tbl_match_results.id_team_home = team_home.id_team
+                                    INNER JOIN tbl_team as team_away ON tbl_match_results.id_team_away = team_away.id_team
+                                    WHERE team_home.id_team = '.$id_team.' OR team_away.id_team = '.$id_team.'
+                                        ');
             $t = $tim->result();
             $s = $squad->result();                        
             $g = $goal->result();
             $a = $assist->result();
+            $p = $posisi->result();
 
                 $data = array(
                     'tim' => $t[0],
                     'squad' => $s,
                     'goal'      => $g,
                     'assist' => $a,
+                    'posisi' => $p,
+                    'results' => $results,
+                    'active' => $active
                 );
             $this->load->view('team', $data);
         }
@@ -204,7 +228,18 @@
                                     WHERE id_team = '.$idteam)->result_array();
             $res['pemain']= $this->m->GetWhere('tbl_pemain', array('id_team' => $idteam))->result_array();
             echo json_encode($res);    
-    }
+        }
+
+        public function cek_match(){
+            $id_team_home = $this->input->get('home');
+            $id_team_away = $this->input->get('away');
+            $data = array('id_team_home' => $id_team_home, 'id_team_away' => $id_team_away);
+            $exist = $this->m->GetWhere('tbl_match_results', $data);
+            $res['match'] = $exist->result_array();
+            $res['exist'] = $exist->num_rows();
+
+            echo json_encode($res);
+        }
 
     public function insert(){
         if(isset($_POST['insert_team'])){
@@ -237,12 +272,27 @@
                     $data['logo'] = $this->upload->data()['file_name'];
                 }
             }else{
-                    $data['logo'] = "user_default.jpg";
+                    $logo_arr = ['logo-default.png', 'logo-default1.png', 'logo-default2.png'];
+                    $logo_rand = $logo_arr[array_rand($logo_arr)];
+                    $data['logo'] = $logo_rand;
             }
             $success = $this->m->Insert('tbl_team', $data);
             if($success){
-                redirect('Klasemen/appklasemen');
+                redirect('/');
             }
             }
+
+            if(isset($_POST['insert_pemain'])){
+                $id_team = $this->input->post('id_team');
+                $pemain = $this->input->post('pemain');
+
+                foreach($pemain as $p => $val){
+                    $this->m->query('INSERT INTO 
+                                        tbl_pemain(nama_pemain, nomor_punggung, posisi, id_team) 
+                                    VALUES ("'.$val["nama_pemain"].'","'.$val["nomor_punggung"].'", "'.$val["posisi"].'",'.$id_team.') 
+                                ');               
+                }
+                redirect('/');
         }
     }
+}   

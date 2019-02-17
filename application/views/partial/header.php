@@ -17,28 +17,30 @@
     <script src="<?= base_url('resources/js/bootstrap.min.js') ?>"></script>    
     <script src="<?= base_url('resources/js/jquery-3.3.1.js')?>"></script>
 
-<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
-<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
-    
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+
     <style>
-    
+        .fog{
+            opacity: 0.3;
+        }
     </style>
 </head>
 <body>
     <nav class="navbar navbar-expand-lg navbar-light bg-light" style="margin-bottom: 8px">
-    <a class="navbar-brand" href="#">Navbar</a>
+    <!-- <a class="navbar-brand" href="#">Navbar</a> -->
     <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
     </button>
     <div class="collapse navbar-collapse" id="navbarNav">
         <ul class="navbar-nav">
-            <li class="nav-item active">
+            <li class="nav-item <?= ($active == '' ? 'active' : '') ?>">
                 <a class="nav-link" href="<?= base_url('Klasemen'); ?>">Home <span class="sr-only">(current)</span></a>
             </li>
-            <li class="nav-item">
+            <li class="nav-item <?= ($active == 'pertandingan' ? 'active' : '') ?>">
                 <a class="nav-link" href="<?= base_url('Klasemen/pertandingan') ?>">Pertandingan</a>
             </li>
-            <li class="nav-item">
+            <li class="nav-item <?= ($active == 'match_results' ? 'active' : '') ?>">
                 <a class="nav-link" href="<?= base_url('Klasemen/match_results') ?>">Hasil</a>
             </li>
         </ul>

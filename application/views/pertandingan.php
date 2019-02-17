@@ -1,5 +1,7 @@
 <?php $this->load->view('partial/header.php') ?>
 <div style="visibility: hidden" id="timsama" class="alert alert-warning alert text-center">Tim Home dan Away Sama. Tidak dapat mengubah skor!</div>
+<div style="visibility: hidden" id="existing" class="alert alert-warning alert text-center"></div>
+<div id="test"></div>
 <?= form_open(''); ?>
 <div class="container">
     <div class="row">
@@ -71,6 +73,7 @@
             <div class="card">
                 <table class="table">
                     <thead>
+                        <th>No.</th>                        
                         <th>Nama</th>
                         <th></th>
                         <th>Goal</th>
@@ -87,6 +90,7 @@
             <div class="card">
                 <table class="table">
                     <thead>
+                        <th>No.</th>
                         <th>Nama</th>
                         <th></th>
                         <th>Goal</th>
@@ -124,6 +128,7 @@
                     var i;
                     for(i = 0; i < data.pemain.length; i++){
                         html += '<tr>'+
+                                    '<td>'+(i+1)+'</td>'+
                                     '<td>'+data.pemain[i].nama_pemain+'</td>'+
                                     '<td><span class="badge badge-primary">'+data.pemain[i].nomor_punggung+'</span></td>'+
                                     '<td><input class="enable goal-home form-control col-6" name="pemain['+data.pemain[i].id_pemain+'][goal]" type="number" value="0" disabled></td>'+
@@ -153,6 +158,7 @@
                     var i;
                     for(i = 0; i < data.pemain.length; i++){
                         html += '<tr>'+
+                                    '<td>'+(i+1)+'</td>'+
                                     '<td>'+data.pemain[i].nama_pemain+'</td>'+
                                     '<td><span class="badge badge-danger">'+data.pemain[i].nomor_punggung+'</span></td>'+
                                     '<td><input class="enable goal-away form-control col-6" name="pemain['+data.pemain[i].id_pemain+'][goal]" type="number" value="0" disabled></td>'+
@@ -176,6 +182,25 @@
                     $("#timsama").css('visibility', 'visible');
                     alert("Tim home dan away sama. Ubah team!");
                 }
+
+                var home = $("#home").val();
+                var away = $("#away").val();
+                $.ajax({
+                    url         : '<?= base_url("Klasemen/cek_match/"); ?>',
+                    type        : 'GET',
+                    async       : false,
+                    dataType    : 'json',
+                    data        : {home:home, away:away},
+                    success     : function(data) {
+                            // alert(data.exist);
+                            if(data.exist > 0){                             
+                                alert("Sudah pernah berlaga!");
+                                $("#existing").css('visibility', 'visible').html('Sudah pernah berlaga pada tanggal: '+data.match[0].tanggal+'. <a href="<?= base_url('Klasemen/match_results_detail/') ?>'+data.match[0].id_match_results+'">Lihat pertandingan</a>');
+                            }else{
+                                $("#existing").css('visibility', 'hidden');
+                            }
+                    }
+                })
             }   
         })
         

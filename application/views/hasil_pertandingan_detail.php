@@ -1,5 +1,4 @@
 <?php $this->load->view('partial/header.php') ?>
-
     <div class="container">
         <div class="jumbotron text-center bg-light">
             <h1>Hasil Pertandingan</h1>
@@ -8,10 +7,11 @@
         </div>
         <div class="row">
             <div class="col-lg-6">
-                <div class="card">
+                <div class="card <?= ($data_home->skor_home > $data_away->skor_away ? 'border border-success' : '') ?>">
                     <div class="card-header text-center">
                         <h3 class="text-center text-primary">Home</h3>
                         <img height="100" width="100" src="<?= base_url('uploads/'.$data_home->logo); ?>">
+                        <input class="form-control col-1 mx-auto text-center" style="margin-top: 16px" type="text" readonly value="<?= $data_home->skor_home ?>">
                     </div>
                     <div class="card-body">
                         <table class="table table">
@@ -41,13 +41,14 @@
                 </div>
             </div>
             <div class="col-lg-6">
-                <div class="card">
+                <div class="card <?= ($data_away->skor_away > $data_home->skor_home ? 'border border-success' : '') ?>">
                     <div class="card-header text-center">
                         <h3 class="text-center text-danger">Away</h3>
                         <img height="100" width="100" src="<?= base_url('uploads/'.$data_away->logo); ?>">
+                        <input class="form-control col-1 mx-auto text-center" style="margin-top: 16px" type="text" readonly value="<?= $data_away->skor_away ?>">
                     </div>
                     <div class="card-body">
-                        <table class="table table">
+                        <table class="table">
                             <thead>
                                 <tr>
                                     <th>No.</th>
@@ -68,6 +69,7 @@
                                        <td><?= $a->owngoal ?></td>
                                     </tr>
                                 <?php } ?>
+                                </tbody>
                         </table>
                     </div>
                 </div>
