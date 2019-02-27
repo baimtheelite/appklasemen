@@ -1,5 +1,13 @@
 <?php $this->load->view('partial/header.php') ?>
 <div style="visibility: hidden" id="timsama" class="alert alert-warning alert text-center">Tim Home dan Away Sama. Tidak dapat mengubah skor!</div>
+<div class="toast">
+        <div class="toast-header">
+            Toast Header
+        </div>
+        <div class="toast-body">
+            Tim Home dan Away Sama. Tidak dapat mengubah skor!
+        </div>
+    </div>
 <div style="visibility: hidden" id="existing" class="alert alert-warning alert text-center"></div>
 <div id="test"></div>
 <?= form_open(''); ?>
@@ -194,8 +202,9 @@
                     success     : function(data) {
                             // alert(data.exist);
                             if(data.exist > 0){                             
-                                alert("Sudah pernah berlaga!");
+                                // alert("Sudah pernah berlaga!");
                                 $("#existing").css('visibility', 'visible').html('Sudah pernah berlaga pada tanggal: '+data.match[0].tanggal+'. <a href="<?= base_url('Klasemen/match_results_detail/') ?>'+data.match[0].id_match_results+'">Lihat pertandingan</a>');
+                                $(".toast").toast("show");
                             }else{
                                 $("#existing").css('visibility', 'hidden');
                             }

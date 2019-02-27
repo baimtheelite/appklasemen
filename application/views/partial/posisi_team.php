@@ -25,7 +25,7 @@
                 <!-- Rekor Klasemen -->
                 <?php $no = 1; ?>
                 <?php foreach ($posisi as $klasemen) { ?>
-                    <tr class="<?= ($klasemen->id_team != $tim->id_team) ? 'fog':'' ?>"" >
+                    <tr class="<?= ($klasemen->id_team != $tim->id_team) ? 'fog':'scroll' ?>">
                         <td><?= $no; ?></td>
                         <td><img src="<?= base_url('uploads/').$klasemen->logo ?>" alt="no logo" width="50" height="50"></td>
                         <td><?= $klasemen->nama_team; ?></td>

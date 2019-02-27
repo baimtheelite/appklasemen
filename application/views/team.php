@@ -8,7 +8,7 @@
                     <div class="card-body text-center">
                         <img src="<?= base_url('uploads/'. $tim->logo) ?>" alt="" height="150" width="150">
                         <h1 class=""><?= $tim->nama_team; ?></h1>
-                        <h2 class="text-secondary">(<?= $tim->kode_team; ?>) <button type="button" class="btn-sm btn-outline-primary" data-toggle="modal" data-target="#posisiTeam">Lihat Posisi</button></h2>
+                        <h2 class="text-secondary">(<?= $tim->kode_team; ?>) <button id="posisi" type="button" class="btn-sm btn-outline-primary" data-toggle="modal" data-target="#posisiTeam">Lihat Posisi</button></h2>
                     </div>
                 </div>
             </div>
@@ -190,10 +190,16 @@
                             <th>Tanggal</th>
                             <th></th>
                         </thead>
-                        <tbody>
-                        <?php if($results->num_rows() > 0){ ?>
+                        <tbody>                            
+                        <?php if($results->num_rows() > 0){ $no = 1; ?>
                             <?php foreach($results->result() as $r){ 
-                                $no = 1
+                                $team_home = $this->db->where('id_match_results = "'.$r->id_match_results.'" AND id_team_home="'.$this->uri->segment(3).'"')->get('tbl_match_results');
+                                $team_away = $this->db->where('id_match_results = "'.$r->id_match_results.'" AND id_team_away="'.$this->uri->segment(3).'"')->get('tbl_match_results');
+                                if($team_home->num_rows()){
+                                    foreach($team_home->result() as $club);
+                                }else{
+                                    foreach($team_away->result() as $club);
+                                }
                             ?>
                                 <tr>
                                     <td><?= $no++; ?></td>
@@ -202,6 +208,25 @@
                                     <td><h2><?= $r->skor_away;?></h2></td>
                                     <td><img width="50" height="50" src="<?= base_url('uploads/'.$r->logo_away) ?>" alt=""><?= $r->away;?></td>
                                     <td><?= $r->tgl;?></td>
+                                    <td>
+                                    <?php if($team_home->num_rows()){ ?>
+                                        <?php if($club->skor_home > $club->skor_away){ ?>
+                                        <span class="badge badge-success">M</span>
+                                        <?php }else if($club->skor_home < $club->skor_away){ ?>
+                                        <span class="badge badge-danger">K</span>
+                                        <?php }else if($club->skor_home == $club->skor_away){ ?>
+                                        <span class="badge badge-warning">S</span>
+                                        <?php } ?>
+                                    <?php }else{ ?>
+                                        <?php if($club->skor_home < $club->skor_away){ ?>
+                                        <span class="badge badge-success">M</span>
+                                        <?php }else if($club->skor_home > $club->skor_away){ ?>
+                                        <span class="badge badge-danger">K</span>
+                                        <?php }else if($club->skor_home == $club->skor_away){ ?>
+                                        <span class="badge badge-warning">S</span>
+                                        <?php } ?>
+                                    <?php } ?>
+                                    </td>
                                     <td><a class="btn btn-primary" href="<?= base_url('Klasemen/match_results_detail/'.$r->id_match_results); ?>">Buka</a></td>
                             <?php } ?>
                         <?php } ?>
@@ -215,6 +240,14 @@
         <?php $this->load->view('partial/posisi_team');  ?>  
         <?php $this->load->view('partial/tambah_pemain');  ?>  
     </div>  
-
+    <script>
+        $(document).ready(function(){
+            $("#posisi").click(function(){
+                $("#posisiTeam").animate(
+                    {scrollTop: $(".scroll").offset(). top -80}, 
+                    500 );
+            })
+        })
+    </script>
 </body>
 </html>

@@ -204,6 +204,7 @@
                                     INNER JOIN tbl_team as team_away ON tbl_match_results.id_team_away = team_away.id_team
                                     WHERE team_home.id_team = '.$id_team.' OR team_away.id_team = '.$id_team.'
                                         ');
+                                        
             $t = $tim->result();
             $s = $squad->result();                        
             $g = $goal->result();
