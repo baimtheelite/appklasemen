@@ -43,6 +43,9 @@
             <li class="nav-item <?= ($active == 'match_results' ? 'active' : '') ?>">
                 <a class="nav-link" href="<?= base_url('Klasemen/match_results') ?>">Hasil</a>
             </li>
+            <li class="nav-item <?= ($active == 'top_player' ? 'active' : '') ?>">
+                <a class="nav-link" href="<?= base_url('Klasemen/top_player') ?>">Top Player</a>
+            </li>
         </ul>
     </div>
     </nav>

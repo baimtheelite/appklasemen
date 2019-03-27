@@ -171,6 +171,8 @@
 
         public function team($id_team = 0){
             $active = $this->uri->segment(2);
+            $id_team = $this->uri->segment(3);
+            
             $tim = $this->m->GetWhere('tbl_team', array('id_team' => $id_team));
             $posisi = $this->m->query('SELECT * FROM tbl_team ORDER BY points DESC, goal_difference DESC');
             $squad = $this->m->query('SELECT 
@@ -240,6 +242,31 @@
             $res['exist'] = $exist->num_rows();
 
             echo json_encode($res);
+        }
+
+        public function top_player(){
+            $top_skor = $this->m->query('SELECT * 
+                                        FROM tbl_pemain 
+                                        INNER JOIN tbl_team
+                                        WHERE tbl_pemain.id_team = tbl_team.id_team
+                                        ORDER BY goal DESC')->result();
+            $top_assist = $this->m->query('SELECT * 
+                                        FROM tbl_pemain 
+                                        INNER JOIN tbl_team
+                                        WHERE tbl_pemain.id_team = tbl_team.id_team
+                                        ORDER BY assist DESC')->result();
+            $top_owngoal = $this->m->query('SELECT * 
+                                        FROM tbl_pemain 
+                                        INNER JOIN tbl_team
+                                        WHERE tbl_pemain.id_team = tbl_team.id_team
+                                        ORDER BY owngoal DESC')->result();
+            $data = array(
+                'active'        => $this->uri->segment(2),
+                'top_skor'      =>  $top_skor,
+                'top_assist'    => $top_assist,
+                'top_owngoal'   => $top_owngoal
+            );
+            $this->load->view('top_player', $data);
         }
 
     public function insert(){
