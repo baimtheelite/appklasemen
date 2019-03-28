@@ -12,6 +12,7 @@
     <link rel="stylesheet" type="text/css" href="<?= base_url('resources/css/w3.css') ?>" />
     <link rel="stylesheet" href="<?= base_url('resources/css/mdb.min.css') ?>">
     <link rel="stylesheet" href="<?= base_url('resources/fontawesome-free-5.7.1-web/css/all.css') ?>">
+    <link rel="stylesheet" href="//cdn.datatables.net/1.10.19/css/jquery.dataTables.min.css">
 
     <script src="<?= base_url('resources/js/popper.min.js') ?>"></script>
     <script src="<?= base_url('resources/js/bootstrap.min.js') ?>"></script>    
@@ -19,7 +20,7 @@
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
-
+    <script src="//cdn.datatables.net/1.10.19/js/jquery.dataTables.min.js"></script>
     <style>
         .fog{
             opacity: 0.3;
